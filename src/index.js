@@ -15,7 +15,7 @@ const observable = new Observable((subscriber) => {
     console.log("leak");
   }, 1000);
 
-  subscriber.complete();
+
   // Clean up memory
   return () => {
     clearInterval(id);
@@ -25,7 +25,7 @@ const observable = new Observable((subscriber) => {
 console.log("before");
 
 // Subscribe an observer (object) with the property next
-observable.subscribe({
+const subscription = observable.subscribe({
   // property next handles data pushed from the observable
   next: (value) => {
     console.log(value);
@@ -37,5 +37,9 @@ observable.subscribe({
     console.error(err);
   },
 });
+
+setTimeout(() => {
+  subscription.unsubscribe();
+}, 4000);
 
 console.log("after");
