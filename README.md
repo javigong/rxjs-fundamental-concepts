@@ -22,7 +22,7 @@
 
 ### Creation Operators: Create new observables.
 
-- Operators List: https://rxjs.dev/api
+Operators List: https://rxjs.dev/api
 
 - Interval with 1 second interval:
 `const observable = interval(1000)`
@@ -30,7 +30,7 @@
 - Timer with 5 seconds delay and 2 second interval:
 `const observable = timer(5000, 2000)`
 
-- fromEvent: Creates an Observable from DOM events, or Node.js EventEmitter events or others.
+- fromEvent: Creates an Observable that emits events of a specific type/eventName coming from the given event target.
 
 ```ts
 import { fromEvent } from "rxjs";
@@ -79,11 +79,9 @@ complete: () => console.log("the end"),
 // the end
 ```
 
-### Pipeable Operators:
+### Pipeable Operators: 
 
-- They are functions for transforming, filtering, and combining data.
-
-- Takes an observable as an input and output a new observable.
+They are functions for transforming, filtering, and combining data. Taking an observable as an input and output a new observable.
 
 ```ts
 const observable = new Observable();
@@ -121,8 +119,50 @@ Marble diagrams provide a concise and visual way to understand the behavior of o
 
 *Example of a Marble Diagram for the map function operator https://rxjs.dev/api/index/function/map
 
+### Pluck Operator (Deprecated)
 
-## Most Common Operators
+Use map and optional chaining: `pluck('foo', 'bar')` is `map(x => x?.foo?.bar)`. Will be removed in v8.
 
-### Timing Operators:
-````
+### Filter Operator
+
+Filter items emitted by the source Observable by only emitting those that satisfy a specified predicate.
+
+Like Array.prototype.filter(), it only emits a value from the source if it passes a criterion function.
+
+```ts
+import { fromEvent, filter } from 'rxjs';
+
+const div = document.createElement('div');
+div.style.cssText = 'width: 200px; height: 200px; background: #09c;';
+document.body.appendChild(div);
+
+const clicks = fromEvent(document, 'click');
+const clicksOnDivs = clicks.pipe(filter(ev => (<HTMLElement>ev.target).tagName === 'DIV'));
+clicksOnDivs.subscribe(x => console.log(x));
+
+// Emit only click events whose target was a DIV element
+```
+
+### Reduce Operator
+
+Applies an accumulator function over the source Observable, and returns the accumulated result when the source completes, given an optional seed value.
+
+Combines together all values emitted on the source, using an accumulator function that knows how to join a new source value into the accumulation from the past.
+
+Like Array.prototype.reduce(), reduce applies an accumulator function against an accumulation and each value of the source Observable (from the past) to reduce it to a single value, emitted on the output Observable. Note that reduce will only emit one value, only when the source Observable completes.
+
+```ts
+import { of } from 'rxjs'
+
+import { reduce } from 'rxjs/operators'
+
+const observable = of(1,2,3,4,5).pipe(
+  reduce(
+    (acc, val) => acc = val,
+    0
+  )
+)
+const subscription = observable.subscribe(x => console.log(x))
+// returns:
+// 15
+```

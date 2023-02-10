@@ -1,4 +1,4 @@
-import { from, fromEvent, interval, Observable, of, timer } from "rxjs";
+import { from, fromEvent, interval, Observable, of, reduce, timer } from "rxjs";
 
 //* Create an observable from scratch
 // const observable = new Observable(
@@ -36,19 +36,36 @@ import { from, fromEvent, interval, Observable, of, timer } from "rxjs";
 // const observable = of([1, 2, 3, 4, 5]);
 
 //* Create a from operator with a fetch request to an API endpoint and return the response as an observable
-const observable = from(
-  fetch('https://jsonplaceholder.typicode.com/todos/1')
-);
+// const observable = from(
+//   fetch('https://jsonplaceholder.typicode.com/todos/1')
+// );
+
+//
 
 //* Subscribe an observer to the observable operator
-const subscription = observable.subscribe({
-  next(value) {
-    console.log(value)
-  },
-  complete() {
-    console.log('Completed')
-  }
-}
-);
+// const subscription = observable.subscribe({
+//   next(value) {
+//     console.log(value)
+//   },
+//   complete() {
+//     console.log('Completed')
+//   }
+// }
+// );
 
-console.log('hello')
+// console.log('hello')
+
+//* Pipeable Operators:
+
+//* Reduce operator
+
+const observable = of(1,2,3,4,5).pipe(
+  reduce(
+    (acc, val) => acc + val,
+    0
+  )
+)
+const subscription = observable.subscribe(x => console.log(x))
+// returns:
+// 15
+
