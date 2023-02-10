@@ -1,4 +1,4 @@
-import { from, fromEvent, interval, Observable, of, reduce, timer } from "rxjs";
+import { interval, reduce, scan, take } from "rxjs";
 
 //* Create an observable from scratch
 // const observable = new Observable(
@@ -18,7 +18,7 @@ import { from, fromEvent, interval, Observable, of, reduce, timer } from "rxjs";
 
 //* Operators are functions that take an observable as input and return a new observable as output
 
-//* CREATION OPERATORS: 
+//* CREATION OPERATORS:
 //* Create an observable from scratch or from other sources
 
 //* Create an observable operator interval with 1 second interval
@@ -59,13 +59,41 @@ import { from, fromEvent, interval, Observable, of, reduce, timer } from "rxjs";
 
 //* Reduce operator
 
-const observable = of(1,2,3,4,5).pipe(
-  reduce(
-    (acc, val) => acc + val,
-    0
-  )
-)
-const subscription = observable.subscribe(x => console.log(x))
+// const observable = of(1,2,3,4,5).pipe(
+//   reduce(
+//     (acc, val) => acc + val,
+//     0
+//   )
+// )
+// const subscription = observable.subscribe(x => console.log(x))
 // returns:
 // 15
+
+//* Take Operator
+
+// const observable = interval(500).pipe(
+//   take(5),
+//   reduce(
+//   (acc, val) => acc + val,
+//   0
+// ));
+// const subscription = observable.subscribe((x) => console.log(x));
+// returns:
+
+//* Scan Operator
+
+const observable = interval(500).pipe(
+  take(5),
+  scan(
+  (acc, val) => acc + val,
+  0
+));
+const subscription = observable.subscribe((x) => console.log(x));
+// returns:
+// 0
+// 1
+// 3
+// 6
+// 10
+
 
