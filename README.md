@@ -195,3 +195,31 @@ const subscription = observable.subscribe((x) => console.log(x));
 // 6
 // 10
 ```
+
+### Tap Operator
+
+Used to perform side-effects for notifications from the source observable
+
+The most common use of tap is actually for debugging. You can place a tap(console.log) anywhere in your observable pipe, log out the notifications as they are emitted by the source returned by the previous operation.
+
+```ts
+const observable = interval(500).pipe(
+  take(5),
+  tap({
+    next(value) {
+      console.log(val)
+    }
+  }),
+  reduce((acc, val) => acc + val, 0)
+);
+const subscription = observable.subscribe((x) => console.log(x));
+// returns:
+// 0 -tap
+// 1 -tap
+// 2 -tap
+// 3 -tap
+// 4 -tap
+// 10
+```
+
+

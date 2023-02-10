@@ -1,4 +1,4 @@
-import { interval, reduce, scan, take } from "rxjs";
+import { interval, reduce, scan, take, tap } from "rxjs";
 
 //* Create an observable from scratch
 // const observable = new Observable(
@@ -79,16 +79,17 @@ import { interval, reduce, scan, take } from "rxjs";
 // ));
 // const subscription = observable.subscribe((x) => console.log(x));
 // returns:
+// 10
 
 //* Scan Operator
 
-const observable = interval(500).pipe(
-  take(5),
-  scan(
-  (acc, val) => acc + val,
-  0
-));
-const subscription = observable.subscribe((x) => console.log(x));
+// const observable = interval(500).pipe(
+//   take(5),
+//   scan(
+//   (acc, val) => acc + val,
+//   0
+// ));
+// const subscription = observable.subscribe((x) => console.log(x));
 // returns:
 // 0
 // 1
@@ -96,4 +97,20 @@ const subscription = observable.subscribe((x) => console.log(x));
 // 6
 // 10
 
+//* Tap Operator
 
+const observable = interval(500).pipe(
+  take(5),
+  tap(console.log),
+  reduce(
+  (acc, val) => acc + val,
+  0
+));
+const subscription = observable.subscribe((x) => console.log(x));
+// returns:
+// 0 -tap
+// 1 -tap
+// 2 -tap
+// 3 -tap
+// 4 -tap
+// 10
