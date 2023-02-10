@@ -221,5 +221,55 @@ const subscription = observable.subscribe((x) => console.log(x));
 // 4 -tap
 // 10
 ```
+### Need of Flattening Operators
 
+Example of why we need flattening operators when returning an observable.
 
+```ts
+const button = document.querySelector("#btn");
+
+const observable = fromEvent(button, "click").pipe(
+  map(() => {
+    return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1");
+  })
+);
+
+const subscription = observable.subscribe({
+  next(value) {
+    value.subscribe(console.log);
+  },
+  complete() {
+    console.log("Completed");
+  },
+});
+// returns:
+// Observable {source: Observable, operator: MapOperator}
+```
+It's returning an observable, to access to the ajax.getJSON() object we need to subscribe to this inner observable. To avoid that we can use Flattening Operators like the following MergeMap Operator.
+
+### MergeMap Operator
+
+Projects each source value to an Observable which is merged in the output Observable.
+
+Maps each value to an Observable, then flattens all of these inner Observables using mergeAll.
+
+```ts
+const button = document.querySelector("#btn");
+
+const observable = fromEvent(button, "click").pipe(
+  mergeMap(() => {
+    return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1");
+  })
+);
+
+const subscription = observable.subscribe({
+  next(value) {
+    console.log(value);
+  },
+  complete() {
+    console.log("Completed");
+  },
+});
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+```

@@ -136,7 +136,7 @@ import { ajax } from "rxjs/ajax";
 //   },
 // });
 // returns:
-// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+// Observable {source: Observable, operator: MapOperator}
 
 
 //* MergeMap Operator
