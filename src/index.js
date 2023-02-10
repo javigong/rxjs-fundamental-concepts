@@ -20,5 +20,14 @@ import { fromEvent, interval, Observable, timer } from "rxjs";
 // const observable = interval(1000);
 
 // Create an observable operator timer with 5 seconds delay and 2 seconds interval
-const observable = timer(5000, 2000);
+// const observable = timer(5000, 2000);
 
+// Create an observable operator fromEvent with document click event
+const observable = fromEvent(
+  document, 'click'
+)
+
+// Subscribe an observer to the observable operator
+const subscription = observable.subscribe(
+  console.log
+);
