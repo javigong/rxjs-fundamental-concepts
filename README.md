@@ -253,6 +253,8 @@ Projects each source value to an Observable which is merged in the output Observ
 
 Maps each value to an Observable, then flattens all of these inner Observables using mergeAll.
 
+![MergeMap Marble Diagram](img/Screen%20Shot%202023-02-10%20at%203.05.56%20PM.png)
+
 ```ts
 const button = document.querySelector("#btn");
 
@@ -310,5 +312,28 @@ const observable = fromEvent(button, "click").pipe(
 // Inner observable completed
 ```
 
-![](img/Screen%20Shot%202023-02-10%20at%2012.54.18%20PM.png)
+![ConcatMap Diagram](img/Screen%20Shot%202023-02-10%20at%2012.54.18%20PM.png)
+
 Warning: if source values arrive endlessly and faster than their corresponding inner Observables can complete, it will result in memory issues as inner Observables amass in an unbounded buffer waiting for their turn to be subscribed to.
+
+### ExhaustMap Operator
+
+ExhaustMap projects each source value to an Observable which is merged in the output Observable only if the previous projected Observable has completed.
+
+![ExhaustMap Diagram](img/Screen%20Shot%202023-02-10%20at%202.42.49%20PM.png)
+
+Returns an Observable containing projected Observables of each item of the source, ignoring projected Observables that start before their preceding Observable has completed.
+
+![ExhausMap Marble Diagram](img/Screen%20Shot%202023-02-10%20at%202.44.55%20PM.png)
+
+### Flattening Operators Recap
+
+FO are Operators for subscribing to inner Operators
+
+- switchMap: Stop working on the order and start working on the new order. Only the latest order will be finished.
+
+- concatMap: The order gets added to a queue. You finish whatever order you're working on. Once you finish the order, you will work on the next order.
+
+- mergeMap: You will work on all orders at the same time as soon as you're given them.
+
+- exhaustMap: You ignore new orders and finish whatever order you're working on. One finished, you are free to accept new orders.

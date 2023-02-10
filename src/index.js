@@ -1,4 +1,4 @@
-import { concatMap, fromEvent, take, tap } from "rxjs";
+import { concatMap, exhaustMap, fromEvent, take, tap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
 //* Create an observable from scratch
@@ -224,10 +224,39 @@ import { ajax } from "rxjs/ajax";
 
 //* ConcatMap Operator
 
+// const button = document.querySelector("#btn");
+
+// const observable = fromEvent(button, "click").pipe(
+//   concatMap(() => {
+//     return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1").pipe(
+//       take(5),
+//       tap({
+//         complete() {
+//           console.log("Inner observable completed");
+//         },
+//       })
+//     );
+//   })
+// );
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+// Inner observable completed
+
+// const subscription = observable.subscribe({
+//   next(value) {
+//     console.log(value);
+//   },
+//   complete() {
+//     console.log("Completed");
+//   },
+// });
+
+//* ExhaustMap Operator
+
 const button = document.querySelector("#btn");
 
 const observable = fromEvent(button, "click").pipe(
-  concatMap(() => {
+  exhaustMap(() => {
     return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1").pipe(
       take(5),
       tap({
