@@ -1,4 +1,4 @@
-import { fromEvent, interval, map, mergeMap, take, tap } from "rxjs";
+import { concatMap, fromEvent, take, tap } from "rxjs";
 import { ajax } from "rxjs/ajax";
 
 //* Create an observable from scratch
@@ -138,7 +138,6 @@ import { ajax } from "rxjs/ajax";
 // returns:
 // Observable {source: Observable, operator: MapOperator}
 
-
 //* MergeMap Operator
 
 // const button = document.querySelector("#btn");
@@ -163,16 +162,85 @@ import { ajax } from "rxjs/ajax";
 //* MergeMap Memory Leak Example
 // use take to limit
 
+// const button = document.querySelector("#btn");
+
+// const observable = fromEvent(button, "click").pipe(
+//   mergeMap(() => {
+//     return interval(1000).pipe(
+//       tap(console.log)
+//     )
+//   }),
+//   take(5)
+// );
+
+// const subscription = observable.subscribe({
+//   next(value) {
+//     console.log(value);
+//   },
+//   complete() {
+//     console.log("Completed");
+//   },
+// });
+// returns:
+// 0
+// 1
+// 2
+// 3
+// 4
+// Completed
+
+//* SwitchMap Operator
+
+// const button = document.querySelector("#btn");
+
+// const observable = fromEvent(button, "click").pipe(
+//   switchMap(() => {
+//     return interval(1000).pipe(
+//       take(5),
+//       tap({
+//         complete() {
+//           console.log('Inner observable completed');
+//         }
+//       }),
+//     )
+//   }),
+// );
+
+// const subscription = observable.subscribe({
+//   next(value) {
+//     console.log(value);
+//   },
+//   complete() {
+//     console.log("Completed");
+//   },
+// });
+// returns:
+// 0
+// 1
+// 2
+// 3
+// 4
+// Inner observable completed
+
+//* ConcatMap Operator
+
 const button = document.querySelector("#btn");
 
 const observable = fromEvent(button, "click").pipe(
-  mergeMap(() => {
-    return interval(1000).pipe(
-      tap(console.log)
-    )
-  }),
-  take(5)
+  concatMap(() => {
+    return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1").pipe(
+      take(5),
+      tap({
+        complete() {
+          console.log("Inner observable completed");
+        },
+      })
+    );
+  })
 );
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+// Inner observable completed
 
 const subscription = observable.subscribe({
   next(value) {
@@ -182,5 +250,3 @@ const subscription = observable.subscribe({
     console.log("Completed");
   },
 });
-// returns:
-// {userId: 1, id: 1, title: "delectus aut autem", completed: false}

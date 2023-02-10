@@ -273,3 +273,42 @@ const subscription = observable.subscribe({
 // returns:
 // {userId: 1, id: 1, title: "delectus aut autem", completed: false}
 ```
+
+### SwitchMap Operator
+
+Projects each source value to an Observable which is merged in the output Observable, emitting values only from the most recently projected Observable.
+
+![SwitchMap Image](img/captures_chrome-capture-2023-1-10.png)
+
+SwitchMap is considered one of the most safest flattening operators.
+
+### ConcatMap Operator
+
+Returns an Observable that emits items based on applying a function that you supply to each item emitted by the source Observable, where that function returns an (so-called "inner") Observable. Each new inner Observable is concatenated with the previous inner Observable.
+
+![ConcatMap Operator](img/Screen%20Shot%202023-02-10%20at%2012.29.52%20PM.png)
+
+Code example, trigger 5 clicks with slow 3G throttling:
+
+```ts
+const button = document.querySelector("#btn");
+
+const observable = fromEvent(button, "click").pipe(
+  concatMap(() => {
+    return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1").pipe(
+      take(5),
+      tap({
+        complete() {
+          console.log("Inner observable completed");
+        },
+      })
+    );
+  })
+);
+// returns 5 times:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+// Inner observable completed
+```
+
+![](img/Screen%20Shot%202023-02-10%20at%2012.54.18%20PM.png)
+Warning: if source values arrive endlessly and faster than their corresponding inner Observables can complete, it will result in memory issues as inner Observables amass in an unbounded buffer waiting for their turn to be subscribed to.
