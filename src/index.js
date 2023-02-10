@@ -1,4 +1,5 @@
-import { interval, reduce, scan, take, tap } from "rxjs";
+import { fromEvent, interval, map, mergeMap, take, tap } from "rxjs";
+import { ajax } from "rxjs/ajax";
 
 //* Create an observable from scratch
 // const observable = new Observable(
@@ -99,14 +100,14 @@ import { interval, reduce, scan, take, tap } from "rxjs";
 
 //* Tap Operator
 
-const observable = interval(500).pipe(
-  take(5),
-  tap(console.log),
-  reduce(
-  (acc, val) => acc + val,
-  0
-));
-const subscription = observable.subscribe((x) => console.log(x));
+// const observable = interval(500).pipe(
+//   take(5),
+//   tap(console.log),
+//   reduce(
+//   (acc, val) => acc + val,
+//   0
+// ));
+// const subscription = observable.subscribe((x) => console.log(x));
 // returns:
 // 0 -tap
 // 1 -tap
@@ -114,3 +115,72 @@ const subscription = observable.subscribe((x) => console.log(x));
 // 3 -tap
 // 4 -tap
 // 10
+
+//* Flattening Operators
+// example of why we need flattening operators
+
+// const button = document.querySelector("#btn");
+
+// const observable = fromEvent(button, "click").pipe(
+//   map(() => {
+//     return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1");
+//   })
+// );
+
+// const subscription = observable.subscribe({
+//   next(value) {
+//     value.subscribe(console.log);
+//   },
+//   complete() {
+//     console.log("Completed");
+//   },
+// });
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+
+
+//* MergeMap Operator
+
+// const button = document.querySelector("#btn");
+
+// const observable = fromEvent(button, "click").pipe(
+//   mergeMap(() => {
+//     return ajax.getJSON("https://jsonplaceholder.typicode.com/todos/1");
+//   })
+// );
+
+// const subscription = observable.subscribe({
+//   next(value) {
+//     console.log(value);
+//   },
+//   complete() {
+//     console.log("Completed");
+//   },
+// });
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+
+//* MergeMap Memory Leak Example
+// use take to limit
+
+const button = document.querySelector("#btn");
+
+const observable = fromEvent(button, "click").pipe(
+  mergeMap(() => {
+    return interval(1000).pipe(
+      tap(console.log)
+    )
+  }),
+  take(5)
+);
+
+const subscription = observable.subscribe({
+  next(value) {
+    console.log(value);
+  },
+  complete() {
+    console.log("Completed");
+  },
+});
+// returns:
+// {userId: 1, id: 1, title: "delectus aut autem", completed: false}
