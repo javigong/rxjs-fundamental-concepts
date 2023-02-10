@@ -18,16 +18,50 @@
 
 - Operators are Functions that help us to avoid imperative programming.
 
-- Two types of operators: 
+- Two types of operators:
 
   - Creation Operators: Create new observables.
 
-  - Pipeable Operators: Takes an observable as an input and output a new observable.
+    - Interval with 1 second interval:
+      `const observable = interval(1000)`
 
-*Operators List: https://rxjs.dev/api
+    - Timer with 5 seconds delay and 2 second interval:
+      `const observable = timer(5000, 2000)`
+
+    - fromEvent with document click event:
+      `const observable = fromEvent(document, click)`
+
+    - of:
+      `const observable = of([1, 2, 3, 4, 5])`
+    - from:
+
+  - Pipeable Operators:
+
+    - They are functions for transforming, filtering, and combining data.
+
+    - Takes an observable as an input and output a new observable.
+
+      ```ts
+      const observable = new Observable();
+
+      const operatorFunc = firstOperator(config);
+
+      const newObservable = operatorFunc(observable);
+
+      const operatorFuncTwo = secondOperator(config);
+
+      const newObservableTwo = operatorFuncTwo(newObservable);
+      ```
+
+      ```ts
+      const observable = new Observable();
+      observable
+        .pipe(firstOperator(config), secondOperator(config))
+        .subscribe();
+      ```
+
+\*Operators List: https://rxjs.dev/api
 
 ## Most Common Operators
 
 ### Timing Operators:
-
-
