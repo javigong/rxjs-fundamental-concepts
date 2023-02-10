@@ -1,45 +1,24 @@
-import { Observable } from "rxjs";
+import { fromEvent, interval, Observable, timer } from "rxjs";
 
-// Create an observable
-const observable = new Observable((subscriber) => {
-  // subscriber.next("Hello world");
-  // subscriber.error('Error!')
-  // subscriber.next("test");
+// Create an observable operator from scratch
+// const observable = new Observable(
+//   (observer) => {
+//     observer.next('Hello');
+//     observer.next('World');
+//     observer.complete();
+//   }
+// );
 
-  // subscriber.complete();
-  // subscriber.next("next");
+// Subscribe an observer to the observable operator
+// const subscription = observable.subscribe(
+//   (value) => console.log(value),
+//   (error) => console.log(error),
+//   () => console.log('Completed')
+// );
 
-  // Pushing Asynchronous Values
-  const id = setInterval(() => {
-    subscriber.next("test");
-    console.log("leak");
-  }, 1000);
+// Create an observable operator interval with 1 second interval
+// const observable = interval(1000);
 
+// Create an observable operator timer with 5 seconds delay and 2 seconds interval
+const observable = timer(5000, 2000);
 
-  // Clean up memory
-  return () => {
-    clearInterval(id);
-  };
-});
-
-console.log("before");
-
-// Subscribe an observer (object) with the property next
-const subscription = observable.subscribe({
-  // property next handles data pushed from the observable
-  next: (value) => {
-    console.log(value);
-  },
-  complete: () => {
-    console.log("complete called!");
-  },
-  error: (err) => {
-    console.error(err);
-  },
-});
-
-setTimeout(() => {
-  subscription.unsubscribe();
-}, 4000);
-
-console.log("after");
