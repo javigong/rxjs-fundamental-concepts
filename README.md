@@ -20,7 +20,7 @@
 
 - Two types of operators:
 
-  - Creation Operators: Create new observables.
+  ### Creation Operators: Create new observables.
 
     - Interval with 1 second interval:
       `const observable = interval(1000)`
@@ -35,7 +35,7 @@
       `const observable = of([1, 2, 3, 4, 5])`
     - from:
 
-  - Pipeable Operators:
+  ### Pipeable Operators:
 
     - They are functions for transforming, filtering, and combining data.
 
@@ -59,6 +59,22 @@
         .pipe(firstOperator(config), secondOperator(config))
         .subscribe();
       ```
+
+    - The Map Operator: similar to Array.map() but applier a given project function to each value emitted by the source Observable, and emits the resulting values as an Observable.
+
+    ```ts
+    import {of} from 'rxjs'
+    import {map} from 'rxjs/operators'
+    
+    const observable = of(1,2,3,4,5).pipe(
+      map((value) => `$${value}`)
+    )
+    ```
+
+    
+
+
+
 
 \*Operators List: https://rxjs.dev/api
 
